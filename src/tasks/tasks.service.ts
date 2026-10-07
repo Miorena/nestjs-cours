@@ -18,21 +18,17 @@ export class TasksService {
 
 	async findOne(id: number): Promise<Task> {
 		const task = await this.taskRepository.findOneBy({ id });
-		if (!task) {
-			throw new NotFoundException(`Tâche ${id} introuvable`);
-		}
+		if (!task) throw new NotFoundException(`Tâche ${id} introuvable`);
 		return task;
 	}
 
 	create(dto: CreateTaskDto): Promise<Task> {
-		const task = this.taskRepository.create({ title: dto.title });
-		return this.taskRepository.save(task);
+		return this.taskRepository.save(this.taskRepository.create(dto));
 	}
 
 	async update(id: number, dto: UpdateTaskDto): Promise<Task> {
 		const task = await this.findOne(id);
-		if (dto.title !== undefined) task.title === dto.title;
-		if (dto.done !== undefined) task.done === dto.done;
+		Object.assign(task, dto);
 		return this.taskRepository.save(task);
 	}
 
@@ -42,8 +38,8 @@ export class TasksService {
 		return this.taskRepository.save(task);
 	}
 
-	async remove(id: number): Promise<void> {
+	async remove(id: number): Promise<Task> {
 		const task = await this.findOne(id);
-		await this.taskRepository.remove(task);
+		return this.taskRepository.remove(task);
 	}
 }
