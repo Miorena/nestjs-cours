@@ -234,11 +234,12 @@ src/
     ├── tasks.controller.ts      # Routes HTTP
     ├── tasks.service.ts         # Logique métier
     ├── task.entity.ts           # Entité TypeORM (table tasks)
+    └── common/
+        └── pagination-query.dto.ts
     └── dto/
         ├── create-task.dto.ts
         ├── update-task.dto.ts
-        ├── query-task.dto.ts
-        └── pagination-query.dto.ts
+        └── query-task.dto.ts
 ```
 
 ## Scripts npm
