@@ -235,7 +235,8 @@ src/
     ├── tasks.service.ts         # Logique métier
     ├── task.entity.ts           # Entité TypeORM (table tasks)
     └── common/
-        └── pagination-query.dto.ts
+        └── dto/
+          └── pagination-query.dto.ts
     └── dto/
         ├── create-task.dto.ts
         ├── update-task.dto.ts
