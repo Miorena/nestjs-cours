@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 import { IsBoolean, IsIn, IsOptional, IsString } from "class-validator";
-import { PaginationQueryDto } from "../../common/pagination-query.dto";
+import { PaginationQueryDto } from "../../common/dto/pagination-query.dto";
 
 export class QueryTaskDto extends PaginationQueryDto {
 	@IsOptional()
