@@ -8,8 +8,10 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
+	Query,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { QueryTaskDto } from './dto/query-task.dto';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -17,8 +19,13 @@ export class TasksController {
 	constructor(private readonly taskService: TasksService) { }
 
 	@Get()
-	findAll() {
-		return this.taskService.findAll();
+	findAll(@Query() query: QueryTaskDto) {
+		return this.taskService.findAll(query);
+	}
+
+	@Get('stats')
+	getStat() {
+		return this.taskService.getStats();
 	}
 
 	@Get(':id')

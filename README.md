@@ -21,104 +21,246 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# nestjs-cours
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API REST de gestion de tâches, construite avec **NestJS**, **TypeORM** et **PostgreSQL**.
+Projet d'apprentissage qui va au-delà du CRUD : validation des données, pagination, filtrage, tri, recherche et statistiques.
 
-## Project setup
+## Sommaire
 
-```bash
-$ npm install
-```
+- [Fonctionnalités](#fonctionnalités)
+- [Stack technique](#stack-technique)
+- [Prérequis](#prérequis)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Lancer l'application](#lancer-lapplication)
+- [Documentation de l'API](#documentation-de-lapi)
+- [Validation et erreurs](#validation-et-erreurs)
+- [Structure du projet](#structure-du-projet)
+- [Scripts npm](#scripts-npm)
+- [Notes importantes](#notes-importantes)
+- [Prochaines étapes](#prochaines-étapes)
 
-## Compile and run the project
+## Fonctionnalités
 
-```bash
-# development
-$ npm run start
+- CRUD sur les tâches (création, lecture, suppression, marquage comme terminée)
+- Persistance dans **PostgreSQL** via TypeORM
+- Validation stricte des données entrantes (`class-validator`, `ValidationPipe`)
+- Pagination, filtrage, recherche textuelle et tri sur la liste des tâches
+- Route de statistiques (`total`, `done`, `pending`)
+- Gestion propre des erreurs HTTP (400, 404)
 
-# watch mode
-$ npm run start:dev
+## Stack technique
 
-# production mode
-$ npm run start:prod
-```
+| Outil | Rôle |
+|---|---|
+| [NestJS](https://nestjs.com) | Framework backend (TypeScript) |
+| [TypeORM](https://typeorm.io) | ORM (entités, repositories) |
+| [PostgreSQL](https://www.postgresql.org) | Base de données |
+| `class-validator` / `class-transformer` | Validation et transformation des DTO |
+| `@nestjs/config` | Lecture des variables d'environnement (`.env`) |
+| Jest | Tests |
 
-## Run tests
+## Prérequis
 
-```bash
-# unit tests
-$ npm run test
+- [Node.js](https://nodejs.org) **20 ou plus** (version LTS recommandée)
+- npm
+- Un serveur **PostgreSQL** accessible en local (port `5432` par défaut)
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Observability
-
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
-
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
-
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
-
-To add it to this project:
+## Installation
 
 ```bash
-$ npm install @nestjs/observe
+git clone <url-du-depot>
+cd nestjs-cours
+npm install
 ```
 
-Then follow the [setup guide](https://docs.nestjs.com/observability/overview) - it takes a single import and an app key.
+Créer la base de données :
 
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
+```sql
+CREATE DATABASE nestjs_cours;
+```
 
-## Resources
+## Configuration
 
-Check out a few resources that may come in handy when working with NestJS:
+Créer un fichier `.env` à la **racine** du projet :
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=votre_mot_de_passe
+DB_NAME=nestjs_cours
+PORT=3000
+```
 
-## Support
+| Variable | Description | Valeur par défaut |
+|---|---|---|
+| `DB_HOST` | Hôte PostgreSQL | — |
+| `DB_PORT` | Port PostgreSQL | `5432` |
+| `DB_USER` | Utilisateur | — |
+| `DB_PASSWORD` | Mot de passe | — |
+| `DB_NAME` | Nom de la base | — |
+| `PORT` | Port de l'API | `3000` |
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+> Le fichier `.env` contient des secrets : il ne doit **jamais** être commité (vérifier qu'il figure dans `.gitignore`).
 
-## Stay in touch
+## Lancer l'application
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+# Développement (rechargement automatique)
+npm run start:dev
 
-## License
+# Production (compiler puis lancer)
+npm run build
+npm run start:prod
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+L'API est disponible sur `http://localhost:3000`.
+Au premier démarrage, la table `tasks` est créée automatiquement.
+
+## Documentation de l'API
+
+### Modèle `Task`
+
+| Champ | Type | Description |
+|---|---|---|
+| `id` | `number` | Identifiant auto-incrémenté |
+| `title` | `string` | Titre (100 caractères maximum) |
+| `done` | `boolean` | État de la tâche (`false` à la création) |
+
+### Routes
+
+| Méthode | URL | Description | Succès |
+|---|---|---|---|
+| `GET` | `/tasks` | Liste paginée, filtrée et triée | `200` |
+| `GET` | `/tasks/stats` | Statistiques globales | `200` |
+| `GET` | `/tasks/:id` | Détail d'une tâche | `200` |
+| `POST` | `/tasks` | Créer une tâche | `201` |
+| `PATCH` | `/tasks/:id/done` | Marquer une tâche comme terminée | `200` |
+| `DELETE` | `/tasks/:id` | Supprimer une tâche | `204` |
+
+### Paramètres de `GET /tasks`
+
+| Paramètre | Type | Défaut | Règles |
+|---|---|---|---|
+| `page` | entier | `1` | `≥ 1` |
+| `limit` | entier | `10` | entre `1` et `100` |
+| `done` | booléen | — | `true` ou `false` |
+| `search` | texte | — | Recherche insensible à la casse dans le titre |
+| `sortBy` | texte | `id` | `id`, `title` ou `done` |
+| `order` | texte | `ASC` | `ASC` ou `DESC` |
+
+### Exemples
+
+```bash
+# Créer une tâche
+curl -X POST http://localhost:3000/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Apprendre NestJS"}'
+
+# Lister : 2e page de 5 tâches non terminées, triées par titre décroissant
+curl "http://localhost:3000/tasks?page=2&limit=5&done=false&sortBy=title&order=DESC"
+
+# Rechercher
+curl "http://localhost:3000/tasks?search=nest"
+
+# Marquer comme terminée
+curl -X PATCH http://localhost:3000/tasks/1/done
+
+# Statistiques
+curl http://localhost:3000/tasks/stats
+
+# Supprimer
+curl -X DELETE http://localhost:3000/tasks/1
+```
+
+### Format des réponses
+
+`GET /tasks` :
+
+```json
+{
+  "items": [
+    { "id": 1, "title": "Apprendre NestJS", "done": false }
+  ],
+  "meta": {
+    "total": 25,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 3
+  }
+}
+```
+
+`GET /tasks/stats` :
+
+```json
+{ "total": 25, "done": 7, "pending": 18 }
+```
+
+## Validation et erreurs
+
+Un `ValidationPipe` global est activé avec `whitelist`, `forbidNonWhitelisted` et `transform` :
+
+- les champs non déclarés dans un DTO sont **refusés** ;
+- les types sont vérifiés (`title` doit être un texte non vide) ;
+- les paramètres d'URL sont convertis (`ParseIntPipe`).
+
+| Cas | Réponse |
+|---|---|
+| Corps invalide (titre vide, champ inconnu…) | `400 Bad Request` |
+| `:id` non numérique, `page=0`, `limit=1000`… | `400 Bad Request` |
+| Tâche inexistante | `404 Not Found` |
+
+Exemple de réponse d'erreur :
+
+```json
+{
+  "message": ["title should not be empty"],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+## Structure du projet
+
+```
+src/
+├── main.ts                      # Point d'entrée, ValidationPipe global
+├── app.module.ts                # Module racine (config, connexion TypeORM)
+└── tasks/
+    ├── tasks.module.ts
+    ├── tasks.controller.ts      # Routes HTTP
+    ├── tasks.service.ts         # Logique métier
+    ├── task.entity.ts           # Entité TypeORM (table tasks)
+    └── dto/
+        ├── create-task.dto.ts
+        ├── update-task.dto.ts
+        ├── query-task.dto.ts
+        └── pagination-query.dto.ts
+```
+
+## Scripts npm
+
+| Commande | Rôle |
+|---|---|
+| `npm run start:dev` | Démarre l'API avec rechargement automatique |
+| `npm run build` | Compile le TypeScript vers `dist/` |
+| `npm run start:prod` | Lance la version compilée |
+| `npm test` | Lance les tests unitaires |
+
+## Notes importantes
+
+- **`synchronize: true`** est activé dans la configuration TypeORM : les tables sont créées et modifiées automatiquement à partir des entités. C'est pratique en développement, mais **à ne pas utiliser en production** (risque de perte de données). Il faudra passer aux migrations.
+- La pagination par `offset` convient aux volumes modestes ; une pagination par curseur serait préférable sur de très grandes tables.
+
+## Prochaines étapes
+
+- [ ] Relations entre entités (utilisateurs, tags)
+- [ ] Authentification (JWT) et autorisation (rôles, propriétaire)
+- [ ] Intercepteurs, filtres d'exceptions et logs
+- [ ] Documentation Swagger / OpenAPI
+- [ ] Migrations TypeORM
+- [ ] Tests unitaires et end-to-end
+- [ ] Conteneurisation (Docker)
